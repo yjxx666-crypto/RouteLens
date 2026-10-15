@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1218">
+  <meta name="description" content="RouteLens：实时抓包、PCAP 离线分析与网站验证，在地图上查看目的地区与流量分布。">
+  <title>RouteLens · 流量路径透镜</title>
+  <link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./traffic.css"><link rel="stylesheet" href="./interface.css"><link rel="stylesheet" href="./website.css">
+</head>
+<body>
+  <svg class="icon-defs" aria-hidden="true"><defs>
+    <symbol id="i-route" viewBox="0 0 24 24"><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="6" r="2.5"/><path d="M5 15.5V9a3 3 0 0 1 3-3h3m8 2.5V15a3 3 0 0 1-3 3h-3M10 3l3 3-3 3m4 6-3 3 3 3"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 8a8 8 0 1 0 0 8M20 3v5h-5"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8m-4-5v5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.1"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 1v4m0 14v4M1 12h4m14 0h4"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></symbol>
+  </defs></svg>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="./" aria-label="RouteLens 首页"><span class="brand-icon"><svg><use href="#i-route"/></svg></span><span>Route<span class="brand-light">Lens</span><small>流量路径透镜</small></span></a>
+      <div class="nav-label">流量分析</div>
+<nav class="primary-nav" aria-label="主导航">
+<button class="nav-item" data-traffic-mode="live"><svg><use href="#i-pulse"/></svg><span>实时流量</span></button>
+<button class="nav-item" data-traffic-mode="offline"><svg><use href="#i-download"/></svg><span>PCAP 分析</span></button>
+<button class="nav-item" data-traffic-mode="validation"><svg><use href="#i-target"/></svg><span>网站验证</span></button>
+</nav>
+<div class="sidebar-support"><button class="nav-item" id="about-button" aria-label="使用说明"><svg><use href="#i-info"/></svg><span>使用说明</span></button></div>
+<div class="device-card"><div class="device-icon"><svg><use href="#i-monitor"/></svg></div><div><strong>我的电脑</strong><small id="device-location">位置未知</small></div><span class="device-status"></span></div>
+      <div class="sidebar-foot">ROUTELENS <span>TRAFFIC / 03</span></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><div class="breadcrumb">流量分析<svg><use href="#i-chevron"/></svg><span id="breadcrumb-current">实时流量</span></div><div class="topbar-right"><span class="demo-badge"><span></span><span id="mode-label">正在加载</span></span><span class="divider-v"></span><span class="session-label" id="session-label">数据保留在本机</span></div></header>
+      <main>
+<section class="page-heading"><div><div class="eyebrow">网站连接端点</div><h1 id="page-title">网站验证</h1><p id="page-description">真实访问 · 双源位置核对 · 只显示连接端点</p></div><div class="heading-actions"><button class="button button-secondary" id="refresh-all"><svg><use href="#i-refresh"/></svg>重试全部记录</button><button class="button button-secondary" id="export-button"><svg><use href="#i-download"/></svg>导出数据</button></div></section>
+<div id="traffic-workspace" hidden></div><div id="validation-workspace"><div id="connection-list" hidden></div><section class="website-target-panel" aria-label="自定义网站验证"><form id="website-form" novalidate><label for="website-url">网站域名或网址</label><div class="website-input-row"><input id="website-url" name="url" type="text" inputmode="url" maxlength="2048" autocomplete="off" spellcheck="false" placeholder="例如 www.baidu.com 或 https://example.com/page" aria-describedby="website-input-help website-form-error"><button class="button button-primary" id="trace-button" type="submit"><svg><use href="#i-arrow"/></svg><span>验证网站</span></button></div><p id="website-form-error" class="website-form-error" role="alert" hidden></p><div class="website-target-bottom"><div class="website-presets"><span>快捷输入</span><button type="button" data-website-url="https://www.baidu.com/">百度</button><button type="button" data-website-url="https://www.bilibili.com/">B 站</button><button type="button" data-website-url="https://www.qq.com/">腾讯网</button></div><label class="website-history-picker" for="target-select">已有记录<select id="target-select" aria-label="选择验证记录"></select></label></div><p id="website-input-help">支持 HTTP / HTTPS、端口和页面路径。仅输入域名时使用 HTTPS；连接上限 5 秒，请求上限 15 秒，响应读取上限 8 MB。</p></form></section><section id="website-result" class="website-result" aria-label="网站验证结果" aria-live="polite" hidden></section>
+<section class="evidence-panel" aria-label="真实访问凭据"><div class="evidence-heading"><strong><span class="live-dot"></span>实际访问快照</strong><span id="measurement-time">正在加载</span><button class="button button-secondary" id="raw-button">访问凭据<svg><use href="#i-arrow"/></svg></button></div><div id="http-evidence" class="http-evidence"></div><div id="job-progress" role="status" hidden></div></section>
+<section class="stats-grid" aria-label="连接端点概览"><div class="stat-card"><span class="stat-icon"><svg><use href="#i-monitor"/></svg></span><div><span class="stat-label">源公网 IP</span><div id="source-ip" class="stat-value ip-value">—</div></div><span id="source-region" class="stat-meta">公网出口观测</span></div><div class="stat-card"><span class="stat-icon"><svg><use href="#i-globe"/></svg></span><div><span class="stat-label">实际目的 IP</span><div id="destination-ip" class="stat-value ip-value">—</div></div><span id="destination-region" class="stat-meta">等待实际访问</span></div><div class="stat-card"><span class="stat-icon"><svg><use href="#i-pulse"/></svg></span><div><span class="stat-label">HTTP 响应</span><div id="http-status" class="stat-value">—</div></div><span id="http-note" class="stat-meta">TLS 验证开启</span></div><div class="stat-card"><span class="stat-icon"><svg><use href="#i-pin"/></svg></span><div><span class="stat-label">目的位置核对</span><div id="verification-count" class="stat-value">—</div></div><span id="verification-label" class="stat-meta">IPWHOIS / IPinfo</span></div></section>
+<div class="validation-view-switch" role="group" aria-label="网站验证视图"><button class="active" data-view="map">连接地图</button><button data-view="connections">访问记录</button></div><div id="map-view"><section class="map-layout"><div class="map-panel"><div class="panel-topline"><div><span class="live-dot"></span><h2>源与目的连接地图</h2><span class="panel-subtitle">IP 地理位置估计</span></div><span class="connection-direction">SOURCE → DESTINATION</span></div><div id="map-stage" class="map-stage"><div class="map-loading" id="map-loading">正在加载地图…</div><svg id="route-map" viewBox="320 110 740 480" role="group" aria-label="源公网 IP 与目的 IP 连接地图"><defs><pattern id="map-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#243039" stroke-width=".45"/></pattern><marker id="direction-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#c6f58a"/></marker></defs><rect x="-4000" y="-4000" width="10000" height="10000" fill="url(#map-grid)"/><g id="province-layer"></g><g id="map-labels"></g><g id="route-layer"></g><g id="node-layer"></g></svg><div class="map-caption"><span>IP</span><div>源 → 目的<small id="map-caption-path"></small></div></div><div class="map-controls"><button id="zoom-in" aria-label="放大地图">+</button><button id="zoom-out" aria-label="缩小地图">−</button><button id="reset-map" aria-label="适配两个端点"><svg><use href="#i-target"/></svg></button></div><div class="map-overlap-note" id="map-overlap-note" hidden>两端估计位置重合，使用双环标记和分开的标签。</div><div class="map-unknown-notice" id="map-unknown-notice" hidden></div><div class="map-legend"><span><i class="legend-dot transit"></i>源公网 IP</span><span><i class="legend-dot destination"></i>实际目的 IP</span><span>→ 连接方向</span></div><div class="map-attribution">底图：DataV · 位置：IPWHOIS / IPinfo</div></div><div class="endpoint-switch"><button data-endpoint="source">源 IP 详情</button><span>箭头表示连接方向，不表示实际路由。</span><button data-endpoint="destination" class="active">目的 IP 详情</button></div></div><aside class="inspector-panel" aria-label="IP 端点详情"><div class="inspector-heading"><h2>端点详情</h2><span class="tiny-badge" id="detail-role">DESTINATION</span></div><div id="node-details"></div></aside></section>
+<section class="endpoint-table-panel hops-panel"><div class="section-heading"><div><h2>连接端点</h2><span>地图仅显示源与目的 IP</span></div><span class="table-hint">点击查看核对来源<svg><use href="#i-arrow"/></svg></span></div><div class="table-scroll"><table class="hops-table"><thead><tr><th>角色</th><th>IP 地址</th><th>地区估计</th><th>核对状态</th><th>查询时间</th></tr></thead><tbody id="endpoint-body"></tbody></table></div></section></div>
+<section class="connections-panel" id="connections-view" hidden><div class="section-heading"><div><h2>真实访问连接</h2><span>最近 30 个网站，包含成功与失败记录</span></div><span class="tiny-badge">MEASURED</span></div><div id="connection-cards"></div></section>
+<footer class="main-footer"><span><svg><use href="#i-info"/></svg>源为第三方观测的公网出口；位置是 IP 库估计。箭头只表示连接方向。访问记录存本地，定位查询只发送公网 IP。</span><button id="method-button">数据与效率说明<svg><use href="#i-arrow"/></svg></button></footer></div></main>
+    </div>
+  </div>
+  <dialog id="about-dialog"><div class="dialog-heading"><span class="eyebrow">PACKETS TO REGIONS</span><button class="icon-button" id="close-dialog" aria-label="关闭"><svg><use href="#i-close"/></svg></button></div><h2>真实抓包，按地区查看</h2><p>实时抓包、PCAP 离线分析与网站访问验证使用各自的真实数据，位置来自第三方 IP 库估计。</p><div class="method-step"><span>01</span><div><strong>Python 采集与聚合</strong><p>所选网卡的本机出站 IPv4 / IPv6 包按目的 IP 聚合。包数包括重传；字节取原始帧长度，包含链路头。抓包只处理网络头部，界面每秒更新汇总。</p></div></div><div class="method-step"><span>02</span><div><strong>第三方核对与缓存</strong><p>IPWHOIS / IPinfo 双源核对，缓存优先、并发 2、每分钟至多启动 30 个新 IP 核对。每会话自动定位 250 个新公网 IP；私网、超额和失败均保留未知计数。地图按地区合并，点击可看 IP 与来源。</p></div></div><div class="method-step"><span>03</span><div><strong>PCAP / PCAPNG 离线重放</strong><p>导入文件后可统计全部包，或填写历史源 IP 只统计出站包。文件流式读取，最大 256 MB。历史出口未知时仅画目的地区，不使用当前公网出口代替。</p></div></div><div class="dialog-note">位置与公网出口均为估计，箭头表示连接方向。多网卡可能重复观察同一流量；VPN / 代理可能只暴露隧道目的 IP。PCAP 与统计保留本机，定位只查询公网 IP。</div><button class="button button-primary" id="dialog-done">明白了，继续查看</button></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="raw-dialog"><div class="dialog-heading"><h2>原始访问与位置凭据</h2><button class="icon-button" id="close-raw" aria-label="关闭原始探测"><svg><use href="#i-close"/></svg></button></div><p id="raw-description"></p><pre id="raw-text"></pre></dialog>
+  <script type="module" src="./app.js"></script>
+<script type="module" src="./traffic-ui.js"></script></body>
+</html>

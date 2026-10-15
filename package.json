@@ -1,0 +1,13 @@
+{
+  "name": "routelens-demo",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "collect": "node scripts/collect.mjs",
+    "check": "node --check dist/app.js && node --check dist/traffic-ui.js && node --check server.mjs",
+    "test": "node --test scripts/*.test.mjs",
+    "test:python": "python -m unittest discover -s python -v"
+  }
+}

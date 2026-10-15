@@ -1,0 +1,12 @@
+node_modules/
+.openai/
+*.tar.gz
+*.zip
+.local/
+__pycache__/
+*.pyc
+*.pcap
+*.pcapng
+.env
+.env.*
+!.env.example
